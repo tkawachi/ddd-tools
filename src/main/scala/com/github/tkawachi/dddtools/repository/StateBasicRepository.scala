@@ -17,6 +17,6 @@ class StateBasicRepository[E <: Entity]
   override def deleteById(id: E#Id): State[Map[E#Id, E], Unit] =
     State(s => (s - id, ()))
 
-  override def findAll(): State[Map[E#Id, E], Seq[E]] =
-    State(s => (s, s.values.toSeq))
+  override def findAll(): State[Map[E#Id, E], List[E]] =
+    State(s => (s, s.values.toList))
 }

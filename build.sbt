@@ -14,7 +14,7 @@ val commonSettings = Seq(
     "UTF-8",
     "-feature",
     "-unchecked",
-    "-Xfatal-warnings",
+    // "-Xfatal-warnings",
     "-Xlint"
   ),
   addCompilerPlugin(
