@@ -1,12 +1,12 @@
 package com.github.tkawachi.dddtools.repository
 
-import cats.Monad
 import com.github.tkawachi.dddtools.Entity
 
 import scala.language.higherKinds
 
-abstract class BasicRepository[E <: Entity, F[_]: Monad] {
+trait BasicRepository[E <: Entity, F[_]] {
   def store(entity: E): F[Unit]
+
   def findById(id: E#Id): F[Option[E]]
 }
 
