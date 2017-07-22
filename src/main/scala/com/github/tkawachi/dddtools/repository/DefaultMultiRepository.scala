@@ -7,10 +7,7 @@ import com.github.tkawachi.dddtools.Entity
 import scala.language.higherKinds
 
 abstract class DefaultMultiRepository[E <: Entity, F[_]: Applicative]
-    extends BasicRepository[E, F]
-    with DeleteRepository[E, F]
-    with BasicMultiRepository[E, F]
-    with DeleteMultiRepository[E, F] {
+    extends StandardRepository[E, F] {
   override def storeMulti(entities: List[E]): F[Unit] =
     entities.traverse_(store)
 

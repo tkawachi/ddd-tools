@@ -1,6 +1,7 @@
 package com.github.tkawachi.dddtools.repository
 
 import cats.data.State
+import com.github.tkawachi.dddtools.Entity
 import org.scalatest.FunSuite
 
 class TestAppTest extends FunSuite {
@@ -10,20 +11,24 @@ class TestAppTest extends FunSuite {
     new StateUserRepository
   val app: TestApp[State[TestState, ?]] = new TestApp[State[TestState, ?]]
 
+  implicit class EntityList[E <: Entity](list: List[E]) {
+    def toIdMap: Map[E#Id, E] = list.map(e => e.id -> e).toMap
+  }
+
   test("findOwner(BookId(1))") {
     val result = app.findOwner(BookId(1))
 
     assert(
       result
-        .run(TestState(Map(UserId(1) -> User(UserId(1), "Taro")),
-                       Map(BookId(1) -> Book(BookId(1), UserId(1)))))
+        .run(TestState(List(User(UserId(1), "Taro")).toIdMap,
+                       List(Book(BookId(1), UserId(1))).toIdMap))
         .value
         ._2 === Some(User(UserId(1), "Taro")))
 
     assert(
       result
-        .run(TestState(Map(UserId(1) -> User(UserId(1), "Taro")),
-                       Map(BookId(1) -> Book(BookId(1), UserId(2)))))
+        .run(TestState(List(User(UserId(1), "Taro")).toIdMap,
+                       List(Book(BookId(1), UserId(2))).toIdMap))
         .value
         ._2 === None)
 
