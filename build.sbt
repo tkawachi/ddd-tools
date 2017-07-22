@@ -17,6 +17,10 @@ val commonSettings = Seq(
     // "-Xfatal-warnings",
     "-Xlint"
   ),
+  libraryDependencies ++= Seq(
+    "org.scalatest" %% "scalatest" % "3.0.3" % "test",
+    "org.scalacheck" %% "scalacheck" % "1.13.4" % "test"
+  ),
   addCompilerPlugin(
     "org.spire-math" % "kind-projector" % "0.9.3" cross CrossVersion.binary)
 )
@@ -24,12 +28,26 @@ val commonSettings = Seq(
 lazy val root = project
   .in(file("."))
   .settings(commonSettings: _*)
+  .aggregate(core, example)
+
+lazy val core = project
   .settings(
-    name := "ddd-tools",
-    description := "DDD tools",
-    libraryDependencies ++= Seq(
-      "org.typelevel" %% "cats" % "0.9.0",
-      "org.scalatest" %% "scalatest" % "3.0.3" % "test",
-      "org.scalacheck" %% "scalacheck" % "1.13.4" % "test"
-    )
-  )
+    commonSettings
+      ++ Seq(
+        name := "ddd-tools",
+        description := "DDD tools",
+        libraryDependencies ++= Seq(
+          "org.typelevel" %% "cats" % "0.9.0"
+        )
+      ): _*)
+
+lazy val example = project
+  .settings(
+    commonSettings ++ Seq(
+      name := "ddd-tools-example",
+      libraryDependencies ++= Seq(
+        "org.skinny-framework" %% "skinny-orm" % "2.3.7",
+        "com.h2database" % "h2" % "1.4.196",
+        "ch.qos.logback" % "logback-classic" % "1.1.11")
+    ): _*)
+  .dependsOn(core)

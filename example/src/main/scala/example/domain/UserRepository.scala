@@ -1,4 +1,6 @@
-package com.github.tkawachi.dddtools.repository
+package example.domain
+
+import com.github.tkawachi.dddtools.repository.StandardRepository
 
 import scala.language.higherKinds
 
