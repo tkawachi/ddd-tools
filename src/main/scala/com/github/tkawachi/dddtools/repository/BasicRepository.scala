@@ -6,13 +6,11 @@ import scala.language.higherKinds
 
 trait BasicRepository[E <: Entity, F[_]] {
   def store(entity: E): F[Unit]
-
   def findById(id: E#Id): F[Option[E]]
 }
 
 trait BasicMultiRepository[E <: Entity, F[_]] {
   def storeMulti(entities: List[E]): F[Unit]
-
   def findByIds(ids: List[E#Id]): F[List[E]]
 }
 

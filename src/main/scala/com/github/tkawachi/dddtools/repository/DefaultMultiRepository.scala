@@ -6,15 +6,17 @@ import com.github.tkawachi.dddtools.Entity
 
 import scala.language.higherKinds
 
-trait DefaultBasicMultiRepository[E <: Entity, F[_]]
+abstract class DefaultMultiRepository[E <: Entity, F[_]: Applicative]
     extends BasicRepository[E, F]
-    with BasicMultiRepository[E, F] {
-
-  protected implicit def applicativeF: Applicative[F]
-
+    with DeleteRepository[E, F]
+    with BasicMultiRepository[E, F]
+    with DeleteMultiRepository[E, F] {
   override def storeMulti(entities: List[E]): F[Unit] =
     entities.traverse_(store)
 
   override def findByIds(ids: List[E#Id]): F[List[E]] =
     ids.traverse(findById).map(_.flatten)
+
+  override def deleteByIds(ids: List[E#Id]): F[Unit] =
+    ids.traverse_(deleteById)
 }
