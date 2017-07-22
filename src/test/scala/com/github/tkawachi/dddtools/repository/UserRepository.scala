@@ -7,5 +7,6 @@ trait UserRepository[F[_]] extends StandardRepository[User, F] {
 }
 
 object UserRepository {
-  def apply[F[_]](implicit repo: UserRepository[F]): UserRepository[F] = repo
+  def apply[F[_]](implicit instance: UserRepository[F]): UserRepository[F] =
+    instance
 }
