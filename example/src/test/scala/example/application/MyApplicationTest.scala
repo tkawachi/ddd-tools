@@ -12,6 +12,8 @@ class MyApplicationTest extends FunSuite {
     new StateBookRepository().mapK(booksNat)
   implicit val userRepository: UserRepository[State[TestState, ?]] =
     new StateUserRepository().mapK(usersNat)
+  implicit val idGenerator: IdGenerator[State[TestState, ?]] =
+    new SeqIdGenerator().mapK(nextIdNat)
 
   val app: MyApplication[State[TestState, ?]] =
     new MyApplication[State[TestState, ?]]
@@ -39,9 +41,19 @@ class MyApplicationTest extends FunSuite {
 
     assert(
       result
-        .run(TestState(Map.empty, Map.empty))
+        .run(TestState())
         .value
         ._2 === None)
   }
 
+  test("registerBook()") {
+    val result = app.registerBook("My book", UserId(100))
+
+    assert(
+      result.run(TestState()).value._2 == Book(BookId(1),
+                                               "My book",
+                                               UserId(100)))
+    assert(result.run(TestState()).value._1.books.size == 1)
+    assert(result.run(TestState()).value._1.nextId == 2)
+  }
 }
