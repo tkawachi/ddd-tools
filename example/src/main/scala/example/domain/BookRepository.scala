@@ -23,8 +23,7 @@ trait BookRepository[F[_]] extends StandardRepository[Book, F] {
 }
 
 object BookRepository {
-  def apply[F[_]](implicit instance: BookRepository[F]): BookRepository[F] =
-    instance
+  def apply[F[_]: BookRepository]: BookRepository[F] = implicitly
 
   implicit val functorKBookRepository: FunctorK[BookRepository] =
     new FunctorK[BookRepository] {

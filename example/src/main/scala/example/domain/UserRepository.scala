@@ -26,8 +26,7 @@ trait UserRepository[F[_]] extends StandardRepository[User, F] {
 }
 
 object UserRepository {
-  def apply[F[_]](implicit instance: UserRepository[F]): UserRepository[F] =
-    instance
+  def apply[F[_]: UserRepository]: UserRepository[F] = implicitly
 
   implicit val functorKUserRepository: FunctorK[UserRepository] =
     new FunctorK[UserRepository] {

@@ -56,4 +56,15 @@ class MyApplicationTest extends FunSuite {
     assert(result.run(TestState()).value._1.books.size == 1)
     assert(result.run(TestState()).value._1.nextId == 2)
   }
+
+  test("registerUser() → registerBook() → findOwner()") {
+    val result = for {
+      user <- app.registerUser("Taro")
+      book <- app.registerBook("Foo", user.id)
+      owner <- app.findOwner(book.id)
+    } yield (user, owner)
+
+    val (user, owner) = result.run(TestState()).value._2
+    assert(owner === Some(user))
+  }
 }

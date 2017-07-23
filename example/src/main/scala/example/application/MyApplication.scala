@@ -15,6 +15,13 @@ class MyApplication[F[_]: Monad: BookRepository: UserRepository: IdGenerator] {
       owner <- OptionT(UserRepository[F].findById(book.ownerId))
     } yield owner).value
 
+  def registerUser(userName: String): F[User] =
+    for {
+      long <- IdGenerator[F].generate
+      user = User(UserId(long), userName)
+      _ <- UserRepository[F].store(user)
+    } yield user
+
   def registerBook(bookName: String, ownerId: UserId): F[Book] =
     for {
       long <- IdGenerator[F].generate

@@ -14,5 +14,5 @@ trait IdGenerator[F[_]] {
 }
 
 object IdGenerator {
-  def apply[F[_]](implicit instance: IdGenerator[F]): IdGenerator[F] = instance
+  def apply[F[_]: IdGenerator]: IdGenerator[F] = implicitly
 }
