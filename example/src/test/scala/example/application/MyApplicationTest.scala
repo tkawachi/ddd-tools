@@ -4,12 +4,15 @@ import cats.data.State
 import com.github.tkawachi.dddtools.Entity
 import example.domain._
 import org.scalatest.FunSuite
+import TestState._
 
 class MyApplicationTest extends FunSuite {
+
   implicit val bookRepository: BookRepository[State[TestState, ?]] =
-    new StateBookRepository
+    new StateBookRepository().transform(booksNat)
   implicit val userRepository: UserRepository[State[TestState, ?]] =
-    new StateUserRepository
+    new StateUserRepository().transform(usersNat)
+
   val app: MyApplication[State[TestState, ?]] =
     new MyApplication[State[TestState, ?]]
 
