@@ -9,9 +9,9 @@ import TestState._
 class MyApplicationTest extends FunSuite {
 
   implicit val bookRepository: BookRepository[State[TestState, ?]] =
-    new StateBookRepository().transform(booksNat)
+    new StateBookRepository().mapK(booksNat)
   implicit val userRepository: UserRepository[State[TestState, ?]] =
-    new StateUserRepository().transform(usersNat)
+    new StateUserRepository().mapK(usersNat)
 
   val app: MyApplication[State[TestState, ?]] =
     new MyApplication[State[TestState, ?]]
