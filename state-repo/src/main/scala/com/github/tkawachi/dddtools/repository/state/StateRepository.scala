@@ -1,7 +1,11 @@
-package com.github.tkawachi.dddtools.repository
+package com.github.tkawachi.dddtools.repository.state
 
 import cats.data.State
 import com.github.tkawachi.dddtools.Entity
+import com.github.tkawachi.dddtools.repository.{
+  DefaultMultiRepository,
+  FindAllRepository
+}
 
 class StateRepository[E <: Entity]
     extends DefaultMultiRepository[E, State[EntityMap[E], ?]]

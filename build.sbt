@@ -28,7 +28,7 @@ val commonSettings = Seq(
 lazy val root = project
   .in(file("."))
   .settings(commonSettings: _*)
-  .aggregate(core, example)
+  .aggregate(core, stateRepo, example)
 
 lazy val core = project
   .settings(
@@ -50,4 +50,9 @@ lazy val example = project
         "com.h2database" % "h2" % "1.4.196",
         "ch.qos.logback" % "logback-classic" % "1.1.11")
     ): _*)
+  .dependsOn(core, stateRepo)
+
+lazy val stateRepo = project
+  .in(file("state-repo"))
+  .settings(commonSettings ++ Seq(name := "ddd-tools-state-repo"): _*)
   .dependsOn(core)

@@ -2,7 +2,7 @@ package example.application
 
 import cats.data.State
 import cats.~>
-import com.github.tkawachi.dddtools.repository.EntityMap
+import com.github.tkawachi.dddtools.repository.state.EntityMap
 import example.domain.{Book, User}
 
 case class TestState(users: EntityMap[User] = Map.empty,

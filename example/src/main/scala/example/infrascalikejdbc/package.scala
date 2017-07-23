@@ -7,11 +7,11 @@ import scalikejdbc.{Binders, DBSession}
 import scala.concurrent.{ExecutionContext, Future}
 
 package object infrascalikejdbc {
-  type Result[A] = Kleisli[Future, DBSession, A]
-  object Result {
-    def apply[A](f: DBSession => Future[A]): Result[A] = Kleisli(f)
+  type Db[A] = Kleisli[Future, DBSession, A]
+  object Db {
+    def apply[A](f: DBSession => Future[A]): Db[A] = Kleisli(f)
 
-    def async[A](f: DBSession => A)(implicit ec: ExecutionContext): Result[A] =
+    def async[A](f: DBSession => A)(implicit ec: ExecutionContext): Db[A] =
       Kleisli(s => Future(f(s)))
   }
 

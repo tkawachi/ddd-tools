@@ -13,7 +13,7 @@ class MyApplicationTest extends FunSuite {
   implicit val userRepository: UserRepository[State[TestState, ?]] =
     new StateUserRepository().mapK(usersNat)
   implicit val idGenerator: IdGenerator[State[TestState, ?]] =
-    new SeqIdGenerator().mapK(nextIdNat)
+    new StateIdGenerator().mapK(nextIdNat)
 
   val app: MyApplication[State[TestState, ?]] =
     new MyApplication[State[TestState, ?]]

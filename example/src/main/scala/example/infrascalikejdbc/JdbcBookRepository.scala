@@ -9,48 +9,47 @@ import scala.concurrent.blocking
 import scala.concurrent.ExecutionContext
 
 class JdbcBookRepository()(implicit ec: ExecutionContext)
-    extends BookRepository[Result] {
+    extends BookRepository[Db] {
 
   import JdbcBookRepository._
 
-  override def store(entity: Book): Result[Unit] =
+  override def store(entity: Book): Db[Unit] =
     for {
       existing <- findById(entity.id)
       _ <- (existing: Option[Book])
         .map(_ =>
-          Result.async { implicit s =>
+          Db.async { implicit s =>
             blocking {
               dao.updateById(entity.id.value).withAttributes(???)
             }
         })
-        .getOrElse(Result.async { implicit s =>
+        .getOrElse(Db.async { implicit s =>
           blocking {
             dao.createWithAttributes(???)
           }
         })
     } yield ()
 
-  override def findById(id: BookId): Result[Option[Book]] =
-    Result.async { implicit s =>
+  override def findById(id: BookId): Db[Option[Book]] =
+    Db.async { implicit s =>
       blocking(dao.findById(id.value))
     }
 
-  override def storeMulti(entities: List[Book]): Result[Unit] =
+  override def storeMulti(entities: List[Book]): Db[Unit] =
     entities.traverse_(store)
 
-  override def findByIds(ids: List[BookId]): Result[List[Book]] =
-    Result.async { implicit s =>
+  override def findByIds(ids: List[BookId]): Db[List[Book]] =
+    Db.async { implicit s =>
       blocking {
         dao.findAllByIds(ids.map(_.value): _*)
       }
     }
 
-  override def deleteByIds(ids: List[BookId]): Result[Unit] =
+  override def deleteByIds(ids: List[BookId]): Db[Unit] =
     ids.traverse_(deleteById)
 
-  override def deleteById(id: BookId): Result[Unit] = Result.async {
-    implicit s =>
-      blocking(dao.deleteById(id.value))
+  override def deleteById(id: BookId): Db[Unit] = Db.async { implicit s =>
+    blocking(dao.deleteById(id.value))
   }
 }
 
