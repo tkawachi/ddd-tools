@@ -5,15 +5,16 @@ import com.github.tkawachi.dddtools.Entity
 import example.domain._
 import org.scalatest.FunSuite
 import TestState._
+import cats.arrow.FunctionK
 
 class MyApplicationTest extends FunSuite {
 
   implicit val bookRepository: BookRepository[State[TestState, ?]] =
-    new StateBookRepository().mapK(booksNat)
+    new StateBookRepository().mapK(FunctionK.lift(bookToState))
   implicit val userRepository: UserRepository[State[TestState, ?]] =
-    new StateUserRepository().mapK(usersNat)
+    new StateUserRepository().mapK(FunctionK.lift(userToState))
   implicit val idGenerator: IdGenerator[State[TestState, ?]] =
-    new StateIdGenerator().mapK(nextIdNat)
+    new StateIdGenerator().mapK(FunctionK.lift(nextIdToState))
 
   val app: MyApplication[State[TestState, ?]] =
     new MyApplication[State[TestState, ?]]
